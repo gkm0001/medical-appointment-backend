@@ -14,11 +14,11 @@ import UsersDetails from "./Schema/UsersDetail.js";
 import { ObjectId } from "bson";
 // import  jwt  from "jsonwebtoken";
 
-const server = express();
-const PORT = 3000;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-server.use(express.json());
-server.use(cors());
+app.use(express.json());
+app.use(cors());
 
 admin.initializeApp({
     credential : admin.credential.cert(serviceAccountKey)
@@ -66,7 +66,7 @@ const verifyJWT = (req,res , next) => {
 }
 
 
-server.get("/get-details-admin", async (req, res) => {
+app.get("/get-details-admin", async (req, res) => {
     try {
       const users = await User.find({})
         .populate({
@@ -93,7 +93,7 @@ server.get("/get-details-admin", async (req, res) => {
   });
 
 
-server.get("/get-details", verifyJWT, async (req, res) => {
+app.get("/get-details", verifyJWT, async (req, res) => {
     try {
       const userId = req.user; // Get the user ID from the request object
 
@@ -140,7 +140,7 @@ server.get("/get-details", verifyJWT, async (req, res) => {
   });
 
 
-server.post('/details1', async (req, res) => {
+app.post('/details1', async (req, res) => {
     try {
         const { names, ages, addresss, emails, genders , userEmail } = req.body;
 
@@ -184,7 +184,7 @@ server.post('/details1', async (req, res) => {
 });
 
 
-server.post('/details2', async (req, res) => {
+app.post('/details2', async (req, res) => {
     try {
         const { Diseases, Allergies, score, Previous_Surgeries, Current_medical_Conditions , userEmail } = req.body;
 
@@ -262,7 +262,7 @@ const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
 
 
-server.post("/signup" , async(req,res) =>  {
+app.post("/signup" , async(req,res) =>  {
          
 
     let {fullName , email , password} = req.body;
@@ -329,7 +329,7 @@ server.post("/signup" , async(req,res) =>  {
 
 // })
 
-server.post("/signin" , async(req,res) => {
+app.post("/signin" , async(req,res) => {
     
    let { email , password } = req.body; 
  
@@ -377,7 +377,7 @@ server.post("/signin" , async(req,res) => {
  
 })
 
-server.post("/google-auth" , async(req,res) => {
+app.post("/google-auth" , async(req,res) => {
     
    let { access_token  } = req.body;
    console.log(access_token);
@@ -441,6 +441,6 @@ server.post("/google-auth" , async(req,res) => {
 
 })
 
- server.listen(PORT , ()=> {
+app.listen(PORT , ()=> {
      console.log(`server running at port ${PORT}`);
  })
